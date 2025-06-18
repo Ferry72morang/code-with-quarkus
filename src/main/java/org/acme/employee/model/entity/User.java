@@ -1,9 +1,7 @@
 package org.acme.employee.model.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,12 +11,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "users", schema = "quarkus") // ganti dari "user" ke "users"
 public class User extends PanacheEntity {
 
-    @Column(nullable = false, unique = true)
+    @SequenceGenerator(
+            name = "userSeq",
+            sequenceName = "quarkus.users_seq", // ini yang akan dicari oleh Hibernate
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
+    public Long id;
+
     public String username;
-
-    @Column(nullable = false)
     public String password;
-
-    @Column(nullable = false)
-    public String role; // "ADMIN" or "USER"
+    public String role;
+    public boolean active;
 }
